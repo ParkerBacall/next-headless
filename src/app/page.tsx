@@ -42,7 +42,6 @@ const getProducts = async (): Promise<GraphQLResponse> => {
   });
 
   if (!res.ok) {
-    console.log()
     const text = await res.text(); // get the response body for more information
 
     throw new Error(`
@@ -57,13 +56,15 @@ const getProducts = async (): Promise<GraphQLResponse> => {
 
 const HomePage = async () => {
   const json = await getProducts();
+  const { products } = json.data;
+  
 
   return (
     <main className="container mx-auto">
     <div className="px-5">
       <h2 className="font-bold text-2xl mb-3">Our Products:</h2>
       <ul className="grid grid-cols-12 gap-4 pb-12">
-        {json.data.products.nodes.map((product) => {
+        {products.nodes.map((product: any) => {
           const prodId = product.id.split("/").pop();
   
           return (
@@ -85,7 +86,7 @@ const HomePage = async () => {
               </div>
               )}
               <div className="p-5">
-                {product.tags.map((tag) => (
+                {product.tags.map((tag: string) => (
                   <span
                     key={tag}
                     className="bg-yellow-400 font-bold py-1 px-3 rounded-full text-xs"

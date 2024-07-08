@@ -3,7 +3,7 @@ import Link from "next/link";
 const Navbar = () => {
   return (
     <nav className="mt-10">
-      <h1 className="font-bold mb-3 text-3xl text-center">Shopify + Next.js 13!</h1>
+      <h1 className="font-bold mb-3 text-3xl text-center">Shopify + Next.js 14 !</h1>
 
       <ul className="text-center">
         <li>
