@@ -1,9 +1,6 @@
 import { gql } from "@/utils/gql";
-import getCart from "./getCart";
 
 const createCart = async (id: string, quantity: number): Promise<any> => {
-  console.log('createCart');
-
   const variables = {
     quantity: quantity,
     id: id,

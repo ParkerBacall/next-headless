@@ -66,7 +66,9 @@ const getCart = async (id: string | undefined): Promise<any> => {
           Response: ${text}
         `);
   }
-  return await res.json();
+  const response = await res.json();
+  const cart = response.data.cart;
+  return cart
 };
 
 export default getCart;

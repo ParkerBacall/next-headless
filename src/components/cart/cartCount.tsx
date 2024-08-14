@@ -6,7 +6,7 @@ const CartCount = () => {
 
   console.log('1', cart)
 
-  return <div>{cart?.data.cart.totalQuantity}</div>;
+  return <div>{cart?.totalQuantity}</div>;
 };
 
 export default CartCount;
