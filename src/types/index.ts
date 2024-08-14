@@ -19,6 +19,13 @@ export type ShopifyExtension = {
   };
 };
 
+export type Connection<T> = {
+  edges: Array<Edge<T>>;
+};
+export type Edge<T> = {
+  node: T;
+};
+
 export type ShopifyProduct = {
   data: {
     product: {
@@ -29,6 +36,9 @@ export type ShopifyProduct = {
         id: string;
         url: string;
         width: number;
+      };
+      variants: {
+        edges: Variant[];
       };
       handle: string;
       id: string;
@@ -42,4 +52,87 @@ export type ShopifyProduct = {
       title: string;
     };
   };
+};
+
+export type Variant = {
+  node: {
+    id: string;
+  };
+};
+
+export type Cart = Omit<ShopifyCart, 'lines'> & {
+  lines: CartItem[];
+};
+
+export type CartProduct = {
+  id: string;
+  handle: string;
+  title: string;
+  featuredImage: Image;
+};
+
+export type CartItem = {
+  id: string | undefined;
+  quantity: number;
+  cost: {
+    totalAmount: Money;
+  };
+  merchandise: {
+    id: string;
+    title: string;
+    selectedOptions: {
+      name: string;
+      value: string;
+    }[];
+    product: CartProduct;
+  };
+};
+
+export type Image = {
+  url: string;
+  altText: string;
+  width: number;
+  height: number;
+};
+
+export type ShopifyCart = {
+  id: string | undefined;
+  checkoutUrl: string;
+  cost: {
+    subtotalAmount: Money;
+    totalAmount: Money;
+    totalTaxAmount: Money;
+  };
+  lines: Connection<CartItem>;
+  totalQuantity: number;
+};
+export type Money = {
+  amount: string;
+  currencyCode: string;
+};
+
+export type Product = Omit<ShopifyProduct, 'variants' | 'images'> & {
+  variants: ProductVariant[];
+  images: Image[];
+  id: string;
+  handle: string;
+  title: string;
+  featuredImage:Image;
+};
+
+export type ProductOption = {
+  id: string;
+  name: string;
+  values: string[];
+};
+
+export type ProductVariant = {
+  id: string;
+  title: string;
+  availableForSale: boolean;
+  selectedOptions: {
+    name: string;
+    value: string;
+  }[];
+  price: Money;
 };

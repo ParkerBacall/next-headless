@@ -1,111 +1,8 @@
-"use server";
-import type { ShopifyProduct, GraphQLResponse } from "@/types";
-import { gql } from "@/utils/gql";
 import { formatPrice } from "@/utils/formatPrice";
 import Image from "next/image";
-import AddToCart from "@/components/addToCart";
+import AddToCart from "@/components/cart/addToCart";
 import { Suspense } from "react";
-
-const getProduct = async (id: string): Promise<ShopifyProduct> => {
-  const res = await fetch(process.env.GRAPHQL_API_URL!, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Access-Token": process.env.ADMIN_API_ACCESS_TOKEN!,
-    },
-    body: JSON.stringify({
-      query: gql`
-        query SingleProductQuery($id: ID!) {
-          product(id: $id) {
-            description
-            featuredImage {
-              altText
-              height
-              id
-              url
-              width
-            }
-            id
-            priceRangeV2 {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
-            }
-            tags
-            title
-          }
-        }
-      `,
-      variables: {
-        id: `gid://shopify/Product/${id}`,
-      },
-    }),
-  });
-
-  if (!res.ok) {
-    const text = await res.text(); // get the response body for more information
-
-    throw new Error(`
-        Failed to fetch data
-        Status: ${res.status}
-        Response: ${text}
-      `);
-  }
-
-  return res.json();
-};
-
-
-const createCart = async(
-  id: string,
-  quantity: string
-): Promise<GraphQLResponse> => {
-  "use server";
-  const variables = {
-    cartInput: {
-      lines: [
-        {
-          quantity: parseInt(quantity),
-          merchandiseId: id,
-        },
-      ],
-    },
-  };
-  const res = await fetch(process.env.GRAPHQL_API_URL!, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Access-Token": process.env.ADMIN_API_ACCESS_TOKEN!,
-    },
-    body: JSON.stringify({
-      query: gql`
-        mutation createCart($cartInput: CartInput) {
-          cartCreate(input: $cartInput) {
-            cart {
-              id
-            }
-          }
-        }
-      `,
-      variables,
-    }),
-  })
-
-    if (!res.ok) {
-    console.log('hit')
-    const text = await res.text(); // get the response body for more information
-    console.log('text', text)
-    throw new Error(`
-        Failed to fetch data
-        Status: ${res.status}
-        Response: ${text}
-      `);
-  }
-  
-  return res.json(); 
-};
-
+import getProduct from "@/utils/Shopify/Products/getProduct";
 
 type SingleProdutPageProps = {
   params: {
@@ -116,6 +13,7 @@ type SingleProdutPageProps = {
 const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
   const json = await getProduct(params.id);
   const { product } = json.data;
+  console.log('re-render', params.id)
 
   return (
     <Suspense fallback={<div>Loading... </div>}>
@@ -152,7 +50,7 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
             </h4>
 
             <p className="mt-2 mb-4">{product.description}</p>
-            <AddToCart id={product.id} createCart={createCart}/>
+            <AddToCart id={product.variants.edges[0].node.id}/>
           </div>
         </div>
       </div>
