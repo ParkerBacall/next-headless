@@ -1,9 +1,13 @@
 import { gql } from "@/utils/gql";
-
-const createCart = async (id: string, quantity: number): Promise<any> => {
+const addToCart = async (
+  cartId: string,
+  id: string,
+  quantity: number
+): Promise<any> => {
   const variables = {
     quantity: quantity,
     id: id,
+    cartId: cartId,
   };
 
   const res = await fetch(process.env.STOREFRONT_API_URL!, {
@@ -15,15 +19,11 @@ const createCart = async (id: string, quantity: number): Promise<any> => {
     },
     body: JSON.stringify({
       query: gql`
-        mutation createCart( $id: ID!, $quantity: Int!
-        ) {
-          cartCreate(  input: {
-            lines: [
-              {
-                quantity: $quantity,
-                merchandiseId: $id,
-              }
-            ]}) {
+        mutation cartLinesAdd($cartId: ID!, $id: ID!, $quantity: Int!) {
+          cartLinesAdd(
+            cartId: $cartId
+            lines: [{ quantity: $quantity, merchandiseId: $id }]
+          ) {
             cart {
               id
             }
@@ -44,8 +44,8 @@ const createCart = async (id: string, quantity: number): Promise<any> => {
         `);
   }
   const response = await res.json();
-  const cartId = response.data.cartCreate.cart.id;
-  return cartId;
+  const updatedCart = response.data.cartLinesAdd.cart;
+  return updatedCart;
 };
 
-export default createCart;
+export default addToCart;

@@ -46,8 +46,6 @@ const getProduct = async (id: string): Promise<ShopifyProduct> => {
       }),
     });
   
-    console.log('res')
-
     if (!res.ok) {
       const text = await res.text(); // get the response body for more information
   

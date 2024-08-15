@@ -67,6 +67,9 @@ const getCart = async (id: string | undefined): Promise<any> => {
         `);
   }
   const response = await res.json();
+  if (!response.data){
+    return null
+  }
   const cart = response.data.cart;
   return cart
 };
