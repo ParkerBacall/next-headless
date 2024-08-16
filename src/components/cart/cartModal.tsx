@@ -12,8 +12,6 @@ const CartModal = () => {
   const { isModalOpen, setModalOpen } = useModal();
   const { cart } = useCart();
 
-  console.log("cart", cart);
-
   const handleClose = () => {
     setModalOpen(!isModalOpen);
     closeDrawer();

@@ -13,8 +13,7 @@ type SingleProdutPageProps = {
 const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
   const json = await getProduct(params.id);
   const { product } = json.data;
-  console.log('re-render', params.id)
-
+  
   return (
     <Suspense fallback={<div>Loading... </div>}>
       <div className="container mx-auto md:pb-10">
