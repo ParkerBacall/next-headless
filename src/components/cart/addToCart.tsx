@@ -1,6 +1,9 @@
 "use client";
 import { createCartAndSetCookie, addItem } from "./actions";
 import { useCart } from "@/providers/CartContext";
+import { useModal } from "@/providers/ModalContext";
+import { openDrawer } from "../overlay/overlayActions";
+
 
 type AddToCartProps = {
   id: string;
@@ -8,15 +11,16 @@ type AddToCartProps = {
 
 const AddToCart = ({ id }: AddToCartProps) => {
   const { cart } = useCart();
+  const { isModalOpen, setModalOpen } = useModal();
 
   const handleAddToCart = () => {
-    if (cart){
-      console.log('cart', cart)
-      addItem(id)
+    if (cart) {
+      addItem(id);
     } else {
       createCartAndSetCookie(id, 1);
-
     }
+    setModalOpen(true)
+    openDrawer()
   };
 
   return (

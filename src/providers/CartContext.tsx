@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { createContext, useState, use, useOptimistic, useEffect, useMemo, useContext, useCallback } from "react";
 import type { Cart, ProductVariant, Product, CartItem  } from '@/types';
 
-  type ICartProviderProps = {
+  type CartProviderProps = {
     children: ReactNode;
     cartPromise: Promise<Cart | undefined>;
   };
@@ -151,7 +151,7 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
     }
   }
   
-  export const CartProvider = ({children, cartPromise}: ICartProviderProps) => {
+  export const CartProvider = ({children, cartPromise}: CartProviderProps) => {
   const initialCart = use(cartPromise);
   const [optimisticCart, updateOptimisticCart] = useOptimistic(initialCart, cartReducer);
 

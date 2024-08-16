@@ -8,6 +8,8 @@ import "./globals.css";
 import { CartProvider } from "@/providers/CartContext";
 import { cookies } from "next/headers";
 import getCart from "@/utils/Shopify/Cart/getCart";
+import Overlay from "../components/overlay/overlay";
+import { ModalProvider } from "@/providers/ModalContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,11 +29,14 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <CartProvider cartPromise={cart}>
-          <Navbar />
-          {children}
-          <Footer />
-        </CartProvider>
+        <ModalProvider>
+          <CartProvider cartPromise={cart}>
+            <Overlay />
+            <Navbar />
+            {children}
+            <Footer />
+          </CartProvider>
+        </ModalProvider>
       </body>
     </html>
   );

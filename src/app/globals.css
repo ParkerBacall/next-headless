@@ -4,13 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 * {
   margin: 0;
-    padding: 0;
+  padding: 0;
 }
 
 body {
@@ -18,19 +20,51 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
 }
 
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 
-#root, #__next {
+#root,
+#__next {
   isolation: isolate;
 }
+body {
+  overflow-x: hidden;
+}
+
+body.openOverlay #overlay {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.bg-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+  transition: transform 300ms, visibility 0ms;
+}
+
+
