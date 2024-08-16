@@ -6,6 +6,7 @@ import { closeDrawer } from "../overlay/overlayActions";
 import { useModal } from "@/providers/ModalContext";
 import { useCart } from "@/providers/CartContext";
 import { formatPrice } from "@/utils/formatPrice";
+import Image from "next/image";
 
 const CartModal = () => {
   const { isModalOpen, setModalOpen } = useModal();
@@ -35,6 +36,7 @@ const CartModal = () => {
             <ul>
               {cart.lines.edges.map((item: any) => {
                 return(<li>
+                    <Image src={item.node.merchandise.image.url} alt={item.node.merchandise.product.title} width="100" height="100"/>
                     {item.node.merchandise.product.title + ' '} 
                     {item.node.quantity}
                 </li>
