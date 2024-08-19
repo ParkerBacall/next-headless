@@ -54,6 +54,11 @@ body {
   overflow-x: hidden;
 }
 
+body.openOverlay {
+  max-height: 100vh;
+  overflow-y: hidden;
+}
+
 body.openOverlay #overlay {
   visibility: visible !important;
   opacity: 1 !important;

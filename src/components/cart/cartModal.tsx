@@ -24,23 +24,29 @@ const CartModal = () => {
       <>
         {cart ? (
           <>
-            <h2 className="text-xl p-1">Your Cart</h2>
-            <ul>
-              {cart.lines.map((item: any, index: number) => {
-                return (
-                  <li key={index}>
-                    <Image
-                      src={item.merchandise.image.url}
-                      alt={item.merchandise.product.title}
-                      width="100"
-                      height="100"
-                    />
-                    {item.merchandise.product.title + " "}
-                    {item.quantity}
-                  </li>
-                );
-              })}
-            </ul>
+            <div>
+              <h2 className="text-xl p-1">Your Cart</h2>
+              <ul className="mt-10">
+                {cart.lines.map((item: any, index: number) => {
+                  return (
+                    <li className="flex relative items-center" key={index}>
+                      <Image
+                        src={item.merchandise.image.url}
+                        alt={item.merchandise.product.title}
+                        width="100"
+                        height="100"
+                      />
+                      <div>
+                        <h3>{item.merchandise.product.title + " "}</h3>
+                      </div>
+                      <span className="absolute bg-blue-600 text-white w-[25px] font-bold h-[25px] text-center top-0 rounded-xl">
+                        {item.quantity}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
             <div className="w-full">
               <p className="p-1">
                 Total Cost: {formatPrice(cart.cost.subtotalAmount.amount)}
