@@ -2,20 +2,14 @@
 import React from "react";
 import { useCart } from "@/providers/CartContext";
 import CartIcon from "../icons/cart";
-import { openDrawer } from "../overlay/overlayActions";
 import { useModal } from "@/providers/ModalContext";
 
 const CartTrigger = () => {
   const { cart } = useCart();
-  const { isModalOpen, setModalOpen } = useModal();
-
-  const handleClick = () => {
-    setModalOpen(!isModalOpen);
-    openDrawer();
-  };
+  const { openModal } = useModal();
 
   return (
-    <button className="absolute right-20 top-10 flex" onClick={handleClick}>
+    <button className="absolute right-5 lg;right-20 top-5 lg:top-10 flex" onClick={openModal}>
       <CartIcon />
       {cart?.totalQuantity}
     </button>

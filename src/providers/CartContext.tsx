@@ -70,6 +70,7 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
   ): CartItem {
     const quantity = existingItem ? existingItem.quantity + 1 : 1;
     const totalAmount = calculateItemCost(quantity, variant.price.amount);
+    console.log('hit')
   
     return {
       id: existingItem?.id,
@@ -110,8 +111,7 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
   }
 
   function cartReducer(state: Cart | undefined, action: CartAction): Cart {
-    const currentCart = state || createEmptyCart();
-  
+    const currentCart = state || createEmptyCart();  
     switch (action.type) {
       case 'UPDATE_ITEM': {
         const { merchandiseId, updateType } = action.payload;

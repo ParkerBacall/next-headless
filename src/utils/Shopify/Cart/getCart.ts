@@ -70,8 +70,13 @@ const getCart = async (id: string | undefined): Promise<any> => {
   if (!response.data){
     return null
   }
-  const cart = response.data.cart;
-  return cart
+  const cartData = response.data.cart;
+  const cartLineItems = cartData.lines.edges.map((item: any) => {
+    return item.node
+  })
+
+return { 'checkoutUrl': cartData.checkoutUrl, 'cost': cartData.cost, lines: cartLineItems, 'totalQuantity': cartData.totalQuantity };
+
 };
 
 export default getCart;

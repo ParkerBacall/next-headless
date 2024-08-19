@@ -2,7 +2,6 @@
 import { createCartAndSetCookie, addItem } from "./actions";
 import { useCart } from "@/providers/CartContext";
 import { useModal } from "@/providers/ModalContext";
-import { openDrawer } from "../overlay/overlayActions";
 
 
 type AddToCartProps = {
@@ -11,7 +10,7 @@ type AddToCartProps = {
 
 const AddToCart = ({ id }: AddToCartProps) => {
   const { cart } = useCart();
-  const { isModalOpen, setModalOpen } = useModal();
+  const { openModal } = useModal();
 
   const handleAddToCart = () => {
     if (cart) {
@@ -19,8 +18,7 @@ const AddToCart = ({ id }: AddToCartProps) => {
     } else {
       createCartAndSetCookie(id, 1);
     }
-    setModalOpen(true)
-    openDrawer()
+    openModal()
   };
 
   return (
