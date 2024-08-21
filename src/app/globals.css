@@ -71,5 +71,3 @@ body.openOverlay #overlay {
 .modal {
   transition: transform 300ms, visibility 0ms;
 }
-
-

@@ -69,9 +69,8 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
     product: Product
   ): CartItem {
     const quantity = existingItem ? existingItem.quantity + 1 : 1;
-    const totalAmount = calculateItemCost(quantity, variant.price.amount);
-    console.log('hit')
-  
+    const totalAmount = calculateItemCost(quantity, variant.price.toString());
+    
     return {
       id: existingItem?.id,
       quantity,

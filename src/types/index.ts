@@ -1,7 +1,7 @@
 export type GraphQLResponse = {
   data: {
     products: {
-      nodes: ShopifyProduct[];
+      nodes: Product[];
     };
   };
   extensions: ShopifyExtension;
@@ -37,9 +37,7 @@ export type ShopifyProduct = {
         url: string;
         width: number;
       };
-      variants: {
-        edges: Variant[];
-      };
+      variants: Variant[];
       handle: string;
       id: string;
       priceRangeV2: {

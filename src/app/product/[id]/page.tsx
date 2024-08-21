@@ -3,6 +3,7 @@ import Image from "next/image";
 import AddToCart from "@/components/cart/addToCart";
 import { Suspense } from "react";
 import getProduct from "@/utils/Shopify/Products/getProduct";
+import { Product } from "@/types";
 
 type SingleProdutPageProps = {
   params: {
@@ -12,7 +13,7 @@ type SingleProdutPageProps = {
 
 const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
   const json = await getProduct(params.id);
-  const { product } = json.data;
+  const product = json.data.product;
   
   return (
     <Suspense fallback={<div>Loading... </div>}>
@@ -49,7 +50,7 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
             </h4>
 
             <p className="mt-2 mb-4">{product.description}</p>
-            <AddToCart id={product.variants.edges[0].node.id}/>
+            <AddToCart product={product} variant={product.variants[0]} id={product.variants[0].id}/>
           </div>
         </div>
       </div>

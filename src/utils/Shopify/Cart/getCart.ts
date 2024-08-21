@@ -17,7 +17,7 @@ const getCart = async (id: string | undefined): Promise<any> => {
         query ($id: ID!) {
           cart(id: $id) {
             cost {
-              subtotalAmount {
+              totalAmount {
                 amount
               }
             }
@@ -28,7 +28,7 @@ const getCart = async (id: string | undefined): Promise<any> => {
                 node {
                   id
                   cost {
-                    subtotalAmount {
+                    totalAmount {
                       amount
                     }
                   }
@@ -41,7 +41,27 @@ const getCart = async (id: string | undefined): Promise<any> => {
                         url(transform: { maxWidth: 100 })
                       }
                       product {
+                        featuredImage {
+                          url(transform: { maxWidth: 100 })
+                        }
                         title
+                        variants(first: 250) {
+                          edges {
+                            node {
+                              id
+                              title
+                              availableForSale
+                              selectedOptions {
+                                name
+                                value
+                              }
+                              price {
+                                amount
+                                currencyCode
+                              }
+                            }
+                          }
+                        }
                       }
                       price {
                         amount
@@ -58,6 +78,7 @@ const getCart = async (id: string | undefined): Promise<any> => {
     }),
   });
 
+
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`
@@ -67,16 +88,31 @@ const getCart = async (id: string | undefined): Promise<any> => {
         `);
   }
   const response = await res.json();
-  if (!response.data){
-    return null
+  if (!response.data) {
+    return null;
   }
   const cartData = response.data.cart;
   const cartLineItems = cartData.lines.edges.map((item: any) => {
-    return item.node
-  })
+    return {
+      ...item.node,
+      merchandise: {
+        ...item.node.merchandise,
+        product: {
+          ...item.node.merchandise.product,
+          variants: item.node.merchandise.product.variants.edges.map(
+            (variant: any) => variant.node
+          ),
+        },
+      },
+    };
+  });
 
-return { 'checkoutUrl': cartData.checkoutUrl, 'cost': cartData.cost, lines: cartLineItems, 'totalQuantity': cartData.totalQuantity };
-
+  return {
+    checkoutUrl: cartData.checkoutUrl,
+    cost: cartData.cost,
+    lines: cartLineItems,
+    totalQuantity: cartData.totalQuantity,
+  };
 };
 
 export default getCart;
