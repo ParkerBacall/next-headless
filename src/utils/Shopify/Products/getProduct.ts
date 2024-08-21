@@ -22,7 +22,18 @@ const getProduct = async (id: string): Promise<ShopifyProduct> => {
                     name
                     value
                   }
-                  price 
+                  price
+                }
+              }
+            }
+            images(first: 20) {
+              edges {
+                node {
+                  altText
+                  height
+                  id
+                  url
+                  width
                 }
               }
             }
@@ -67,6 +78,7 @@ const getProduct = async (id: string): Promise<ShopifyProduct> => {
     data: {
       product: {
         ...productData.data.product,
+        images: productData.data.product.images.edges.map((image: any) => image.node),
         variants: productData.data.product.variants.edges.map(
           (variant: any) => variant.node
         ),

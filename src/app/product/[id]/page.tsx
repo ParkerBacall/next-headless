@@ -14,6 +14,8 @@ type SingleProdutPageProps = {
 const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
   const json = await getProduct(params.id);
   const product = json.data.product;
+
+  console.log('product', product)
   
   return (
     <Suspense fallback={<div>Loading... </div>}>

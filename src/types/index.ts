@@ -37,7 +37,8 @@ export type ShopifyProduct = {
         url: string;
         width: number;
       };
-      variants: Variant[];
+      images: Image[]
+      variants: ProductVariant[];
       handle: string;
       id: string;
       priceRangeV2: {
@@ -53,6 +54,7 @@ export type ShopifyProduct = {
 };
 
 export type Variant = {
+  id: string;
   node: {
     id: string;
   };
@@ -109,13 +111,19 @@ export type Money = {
   currencyCode: string;
 };
 
-export type Product = Omit<ShopifyProduct, 'variants' | 'images'> & {
+export type Product = {
   variants: ProductVariant[];
   images: Image[];
   id: string;
   handle: string;
   title: string;
-  featuredImage:Image;
+  featuredImage: {
+    altText: string;
+    height: number;
+    id: string;
+    url: string;
+    width: number;
+  };
 };
 
 export type ProductOption = {
