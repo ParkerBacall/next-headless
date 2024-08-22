@@ -3,7 +3,7 @@ import Image from "next/image";
 import AddToCart from "@/components/cart/addToCart";
 import { Suspense } from "react";
 import getProduct from "@/utils/Shopify/Products/getProduct";
-import { Product } from "@/types";
+import placeholder from "../../../../public/placeholder.png";
 
 type SingleProdutPageProps = {
   params: {
@@ -15,14 +15,12 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
   const json = await getProduct(params.id);
   const product = json.data.product;
 
-  console.log('product', product)
-  
   return (
     <Suspense fallback={<div>Loading... </div>}>
       <div className="container mx-auto md:pb-10">
         <div className="flex flex-col md:flex-row md:items-center">
           <div className="md:basis-1/2">
-            {product.featuredImage && (
+            {product.featuredImage ? (
               <Image
                 src={product.featuredImage.url}
                 alt={product.featuredImage.altText}
@@ -31,6 +29,15 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
                 placeholder="blur"
                 blurDataURL={product.featuredImage.url}
               />
+            ) : (
+              <div className="flex justify-center items-center w-full h-full">
+                <Image
+                  src={placeholder}
+                  alt={"lorem ipsum"}
+                  width="100"
+                  height="100"
+                />
+              </div>
             )}
           </div>
 
@@ -52,7 +59,11 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
             </h4>
 
             <p className="mt-2 mb-4">{product.description}</p>
-            <AddToCart product={product} variant={product.variants[0]} id={product.variants[0].id}/>
+            <AddToCart
+              product={product}
+              variant={product.variants[0]}
+              id={product.variants[0].id}
+            />
           </div>
         </div>
       </div>

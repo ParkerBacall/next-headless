@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useTransition } from "react";
 import CloseIcon from "../icons/close";
 import { useModal } from "@/providers/ModalContext";
 import { useCart } from "@/providers/CartContext";
@@ -8,10 +8,20 @@ import { formatPrice } from "@/utils/formatPrice";
 import Image from "next/image";
 import TrashIcon from "../icons/trash";
 import QuantityInput from "./quantityInput";
+import placeholder from "../../../public/placeholder.png";
+import { updateItem } from "./actions";
 
 const CartModal = () => {
   const { isModalOpen, closeModal } = useModal();
-  const { cart } = useCart();
+  const { cart, updateCartItem } = useCart();
+  const [isPending, startTransition] = useTransition();
+
+  const handleDelete = (item: any) => {
+    startTransition(() => {
+      updateCartItem(item.merchandise.id, "delete");
+    });
+    updateItem(item.id, 0);
+  };
 
   return (
     <div
@@ -24,7 +34,7 @@ const CartModal = () => {
         <CloseIcon />
       </button>
       <>
-        {cart ? (
+        {cart && cart?.totalQuantity !== 0 ? (
           <>
             <div>
               <h2 className="text-2xl p-1">Your Cart</h2>
@@ -35,21 +45,39 @@ const CartModal = () => {
                       className="flex relative items-start w-full"
                       key={index}
                     >
-                      <Image
-                        src={item.merchandise.product.featuredImage.url}
-                        alt={item.merchandise.product.title}
-                        width="100"
-                        height="100"
-                      />
+                      {item.merchandise.product.featuredImage?.url ? (
+                        <Image
+                          src={item.merchandise.product.featuredImage.url}
+                          alt={item.merchandise.product.title}
+                          width="100"
+                          height="100"
+                        />
+                      ) : (
+                        <div className="flex justify-center items-center w-[100px] h-[100px]">
+                          <Image
+                            src={placeholder}
+                            alt={"lorem ipsum"}
+                            width="50"
+                            height="50"
+                          />
+                        </div>
+                      )}
                       <div className="flex flex-col gap-[5px] w-2/3">
                         <h3 className="text-lg">
                           {item.merchandise.product.title}
                         </h3>
 
-                        <QuantityInput quantity={item.quantity} />
+                        <QuantityInput
+                          product={item.merchandise.product}
+                          id={item.id}
+                          quantity={item.quantity}
+                        />
                         <p>{formatPrice(item.cost.totalAmount.amount)}</p>
                       </div>
-                      <button className="">
+                      <button
+                        disabled={isPending}
+                        onClick={() => handleDelete(item)}
+                      >
                         <TrashIcon />
                       </button>
                     </li>
@@ -67,9 +95,9 @@ const CartModal = () => {
             </div>
           </>
         ) : (
-          <p>no items in cart </p>
+          <p className="mt-[60px] p-1 text-lg">Cart Currently Empty </p>
         )}
-        </>
+      </>
     </div>
   );
 };

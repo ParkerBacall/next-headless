@@ -30,6 +30,7 @@ export type ShopifyProduct = {
   data: {
     product: {
       description: string;
+      status: string; 
       featuredImage: {
         altText: string;
         height: number;
@@ -115,6 +116,7 @@ export type Product = {
   variants: ProductVariant[];
   images: Image[];
   id: string;
+  status: string; 
   handle: string;
   title: string;
   featuredImage: {

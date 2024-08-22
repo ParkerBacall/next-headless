@@ -12,6 +12,7 @@ const getProduct = async (id: string): Promise<ShopifyProduct> => {
         query SingleProductQuery($id: ID!) {
           product(id: $id) {
             description
+            status
             variants(first: 25) {
               edges {
                 node {

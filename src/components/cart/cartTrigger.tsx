@@ -11,7 +11,7 @@ const CartTrigger = () => {
   return (
     <button className="absolute right-5 lg;right-20 top-5 lg:top-10 flex" onClick={openModal}>
       <CartIcon />
-      {cart?.totalQuantity}
+      {cart?.totalQuantity !== 0 && cart?.totalQuantity}
     </button>
   );
 };

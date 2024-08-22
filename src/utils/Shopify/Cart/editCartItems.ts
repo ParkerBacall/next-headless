@@ -1,5 +1,5 @@
 import { gql } from "@/utils/gql";
-const updateCartItem = async (
+const editCartItems = async (
   cartId: string,
   id: string,
   quantity: number
@@ -20,9 +20,9 @@ const updateCartItem = async (
     body: JSON.stringify({
       query: gql`
         mutation cartLinesUpdate($cartId: ID!, $id: ID!, $quantity: Int!) {
-          cartLinesAdd(
+          cartLinesUpdate(
             cartId: $cartId
-            lines: [{ quantity: $quantity, merchandiseId: $id }]
+            lines: [{ quantity: $quantity, id: $id }]
           ) {
             cart {
               id
@@ -44,8 +44,8 @@ const updateCartItem = async (
         `);
   }
   const response = await res.json();
-  const updatedCart = response.data.cartLinesAdd.cart;
+  const updatedCart = response.data.cartLinesUpdate.cart;
   return updatedCart;
 };
 
-export default updateCartItem;
+export default editCartItems;

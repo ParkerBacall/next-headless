@@ -88,7 +88,7 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
           id: product.id,
           handle: product.handle,
           title: product.title,
-          featuredImage: product.featuredImage
+          featuredImage: product.featuredImage,
         }
       }
     };
@@ -141,7 +141,7 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
   
         const updatedLines = existingItem
           ? currentCart.lines.map((item) => (item.merchandise.id === variant.id ? updatedItem : item))
-          : [...currentCart.lines, updatedItem];
+          : [updatedItem, ...currentCart.lines];
   
         return { ...currentCart, ...updateCartTotals(updatedLines), lines: updatedLines };
       }
