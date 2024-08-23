@@ -9,7 +9,8 @@ import Image from "next/image";
 import TrashIcon from "../icons/trash";
 import QuantityInput from "./quantityInput";
 import placeholder from "../../../public/placeholder.png";
-import { updateItem } from "./actions";
+import { redirectToCheckout, updateItem } from "./actions";
+import { redirect } from "next/navigation";
 
 const CartModal = () => {
   const { isModalOpen, closeModal } = useModal();
@@ -89,7 +90,10 @@ const CartModal = () => {
               <p className="p-1">
                 Total Cost: {formatPrice(cart.cost.totalAmount.amount)}
               </p>
-              <button className="mt-2 w-full px-4 py-2 bg-blue-600  text-white rounded-lg">
+              <button
+                onClick={() => redirectToCheckout()}
+                className="mt-2 w-full px-4 py-2 bg-blue-600  text-white rounded-lg"
+              >
                 Checkout
               </button>
             </div>
