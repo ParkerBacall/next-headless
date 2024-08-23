@@ -7,10 +7,9 @@ import { useCart } from "@/providers/CartContext";
 import { formatPrice } from "@/utils/formatPrice";
 import Image from "next/image";
 import TrashIcon from "../icons/trash";
-import QuantityInput from "./quantityInput";
+import QuantityInput from "../common/quantityInput";
 import placeholder from "../../../public/placeholder.png";
 import { redirectToCheckout, updateItem } from "./actions";
-import { redirect } from "next/navigation";
 
 const CartModal = () => {
   const { isModalOpen, closeModal } = useModal();
@@ -23,6 +22,24 @@ const CartModal = () => {
     });
     updateItem(item.id, 0);
   };
+
+  const handleQuantityUpdate = (target: string, quantity: number, item: any) => {
+    const { product } = item.merchandise
+    const { id } = item
+    if (target === 'plus') {
+      startTransition(() => {
+        updateCartItem(product.variants[0].id, 'plus')
+      })
+      updateItem(id, quantity + 1);
+    } else {
+      startTransition(() => {
+        updateCartItem(product.variants[0].id, 'minus')
+      })
+      updateItem(id, quantity - 1);
+    }
+  }
+  
+  const quantityInputDisabled = isPending;
 
   return (
     <div
@@ -69,9 +86,11 @@ const CartModal = () => {
                         </h3>
 
                         <QuantityInput
-                          product={item.merchandise.product}
-                          id={item.id}
+                          isMinusDisabled={quantityInputDisabled}
+                          isPlusDisabled={quantityInputDisabled}
+                          handleQuantityUpdate={handleQuantityUpdate}
                           quantity={item.quantity}
+                          item={item}
                         />
                         <p>{formatPrice(item.cost.totalAmount.amount)}</p>
                       </div>

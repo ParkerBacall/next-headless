@@ -55,7 +55,5 @@ export async function createCartAndSetCookie(id: string, quantity: number) {
       return 'Error fetching cart';
     }
 
-    console.log(cart)
-  
     redirect(cart.checkoutUrl);
   }

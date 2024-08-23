@@ -1,6 +1,6 @@
 'use client'
 import type { ReactNode } from 'react';
-import { createContext, useState, use, useOptimistic, useEffect, useMemo, useContext, useCallback } from "react";
+import { createContext, use, useOptimistic, useMemo, useContext } from "react";
 import type { Cart, ProductVariant, Product, CartItem  } from '@/types';
 
   type CartProviderProps = {
@@ -12,7 +12,7 @@ import type { Cart, ProductVariant, Product, CartItem  } from '@/types';
 
 type CartAction =
   | { type: 'UPDATE_ITEM'; payload: { merchandiseId: string; updateType: UpdateType } }
-  | { type: 'ADD_ITEM'; payload: { variant: ProductVariant; product: Product } };
+  | { type: 'ADD_ITEM'; payload: { variant: ProductVariant; product: Product, quantity: number } };
 
 type CartContextType = {
   cart: Cart | undefined;
@@ -21,7 +21,6 @@ type CartContextType = {
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
-
 
 function calculateItemCost(quantity: number, price: string): string {
   return (Number(price) * quantity).toString();
@@ -66,9 +65,10 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
   function createOrUpdateCartItem(
     existingItem: CartItem | undefined,
     variant: ProductVariant,
-    product: Product
+    product: Product,
+    addedQuantity: number
   ): CartItem {
-    const quantity = existingItem ? existingItem.quantity + 1 : 1;
+    const quantity = existingItem ? existingItem.quantity + addedQuantity : 1;
     const totalAmount = calculateItemCost(quantity, variant.price.toString());
     
     return {
@@ -135,9 +135,9 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
         return { ...currentCart, ...updateCartTotals(updatedLines), lines: updatedLines };
       }
       case 'ADD_ITEM': {
-        const { variant, product } = action.payload;
+        const { variant, product, quantity } = action.payload;
         const existingItem = currentCart.lines.find((item) => item.merchandise.id === variant.id);
-        const updatedItem = createOrUpdateCartItem(existingItem, variant, product);
+        const updatedItem = createOrUpdateCartItem(existingItem, variant, product, quantity);
   
         const updatedLines = existingItem
           ? currentCart.lines.map((item) => (item.merchandise.id === variant.id ? updatedItem : item))
@@ -159,8 +159,8 @@ function updateCartItem(item: CartItem, updateType: UpdateType): CartItem | null
     updateOptimisticCart({ type: 'UPDATE_ITEM', payload: { merchandiseId, updateType } });
   };
 
-  const addCartItem = (variant: ProductVariant, product: Product) => {
-    updateOptimisticCart({ type: 'ADD_ITEM', payload: { variant, product } });
+  const addCartItem = (variant: ProductVariant, product: Product, quantity: number) => {
+    updateOptimisticCart({ type: 'ADD_ITEM', payload: { variant, product, quantity } });
   };
 
   const value = useMemo(

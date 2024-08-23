@@ -59,6 +59,7 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
             </h4>
 
             <p className="mt-2 mb-4">{product.description}</p>
+
             <AddToCart
               product={product}
               variant={product.variants[0]}
