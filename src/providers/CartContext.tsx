@@ -17,7 +17,7 @@ type CartAction =
 type CartContextType = {
   cart: Cart | undefined;
   updateCartItem: (merchandiseId: string, updateType: UpdateType) => void;
-  addCartItem: (variant: ProductVariant, product: Product) => void;
+  addCartItem: (variant: ProductVariant, product: Product, quantity: number) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
