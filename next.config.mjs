@@ -1,9 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-        domains: ["cdn.shopify.com"]
-      },
-      reactStrictMode: true
+  images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'cdn.shopify.com',
+          pathname: '**',
+        },
+      ],
+    },
+    reactStrictMode: true
 };
 
 export default nextConfig;

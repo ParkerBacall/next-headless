@@ -2,30 +2,27 @@
 import { createCartAndSetCookie, addItem } from "./actions";
 import { useCart } from "@/providers/CartContext";
 import { useModal } from "@/providers/ModalContext";
-import type { Product, ProductVariant } from "@/types";
+import type { Product } from "@/types";
 import { useTransition } from "react";
 import { useState } from "react";
 import QuantityInput from "../common/quantityInput";
+import VariantSelector from "../product/variantSelector";
 
 type AddToCartProps = {
-  id: string;
   product: Product;
-  variant: ProductVariant;
 };
 
-const AddToCart = ({ id, product }: AddToCartProps) => {
+const AddToCart = ({ product }: AddToCartProps) => {
   const { cart, addCartItem } = useCart();
   const { openModal } = useModal();
   const [quantity, setQuantity] = useState(1);
+  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
   const [isPending, startTransition] = useTransition();
 
   const isPlusDisabled = quantity >= 9;
   const isMinusDisabled = quantity <= 1;
 
-  const handleQuantityUpdate = (
-    target: string,
-    quantity: number,
-  ) => {
+  const handleQuantityUpdate = (target: string, quantity: number) => {
     if (target === "plus") {
       setQuantity(quantity + 1);
     } else {
@@ -36,25 +33,33 @@ const AddToCart = ({ id, product }: AddToCartProps) => {
   const isDisabled =
     isPending ||
     product.status !== "ACTIVE" ||
-    !product.variants[0].availableForSale;
+    !selectedVariant.availableForSale;
 
   const handleAddToCart = () => {
     if (cart) {
       startTransition(() => {
-        addCartItem(product.variants[0], product, quantity);
+        addCartItem(selectedVariant, product, quantity);
       });
-      addItem(id, quantity);
+      addItem(selectedVariant.id, quantity);
     } else {
       startTransition(() => {
-        addCartItem(product.variants[0], product, quantity);
+        addCartItem(selectedVariant, product, quantity);
       });
-      createCartAndSetCookie(id, quantity);
+      createCartAndSetCookie(selectedVariant.id, quantity);
     }
     openModal();
   };
 
   return (
     <>
+      {product.options.length > 1 &&
+        product.options[0].optionValues.length > 1 && (
+          <VariantSelector
+            product={product}
+            selectedVariant={selectedVariant}
+            setSelectedVariant={setSelectedVariant}
+          />
+        )}
       <QuantityInput
         isMinusDisabled={isMinusDisabled}
         isPlusDisabled={isPlusDisabled}

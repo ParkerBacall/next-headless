@@ -13,6 +13,14 @@ const getProduct = async (id: string): Promise<ShopifyProduct> => {
           product(id: $id) {
             description
             status
+            options(first: 50) {
+              name
+              id
+              optionValues {
+                id
+                name
+              }
+            }
             variants(first: 25) {
               edges {
                 node {
@@ -74,6 +82,8 @@ const getProduct = async (id: string): Promise<ShopifyProduct> => {
   }
 
   const productData = await res.json();
+
+  console.log('--', productData.data.product)
 
   return {
     data: {

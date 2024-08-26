@@ -40,6 +40,10 @@ const getCart = async (id: string | undefined): Promise<any> => {
                       image {
                         url(transform: { maxWidth: 100 })
                       }
+                      selectedOptions {
+                        name
+                        value
+                      }
                       product {
                         featuredImage {
                           url(transform: { maxWidth: 100 })
@@ -77,7 +81,6 @@ const getCart = async (id: string | undefined): Promise<any> => {
       variables,
     }),
   });
-
 
   if (!res.ok) {
     const text = await res.text();

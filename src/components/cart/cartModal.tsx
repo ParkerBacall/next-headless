@@ -10,6 +10,7 @@ import TrashIcon from "../icons/trash";
 import QuantityInput from "../common/quantityInput";
 import placeholder from "../../../public/placeholder.png";
 import { redirectToCheckout, updateItem } from "./actions";
+import getSelectedVariant from "@/utils/Shopify/getSelectedVaraint";
 
 const CartModal = () => {
   const { isModalOpen, closeModal } = useModal();
@@ -23,27 +24,35 @@ const CartModal = () => {
     updateItem(item.id, 0);
   };
 
-  const handleQuantityUpdate = (target: string, quantity: number, item: any) => {
-    const { product } = item.merchandise
-    const { id } = item
-    if (target === 'plus') {
-      startTransition(() => {
-        updateCartItem(product.variants[0].id, 'plus')
-      })
-      updateItem(id, quantity + 1);
-    } else {
-      startTransition(() => {
-        updateCartItem(product.variants[0].id, 'minus')
-      })
-      updateItem(id, quantity - 1);
+  const handleQuantityUpdate = (
+    target: string,
+    quantity: number,
+    item: any
+  ) => {
+    const { product } = item.merchandise;
+    const { id, merchandise } = item;
+    const { selectedOptions } = merchandise;
+    const { value, name } = selectedOptions[0];
+    const selectedVaraint = getSelectedVariant(product, value, name);
+    if (selectedVaraint) {
+      if (target === "plus") {
+        startTransition(() => {
+          updateCartItem(selectedVaraint.id, "plus");
+        });
+        updateItem(id, quantity + 1);
+      } else {
+        startTransition(() => {
+          updateCartItem(selectedVaraint.id, "minus");
+        });
+        updateItem(id, quantity - 1);
+      }
     }
-  }
-  
-  const quantityInputDisabled = isPending;
+  };
 
+  const quantityInputDisabled = isPending;
   return (
     <div
-      className={`modal shadow-md px-5 py-10 w-full lg:w-[450px] h-full fixed z-[3] bg-white right-0 invisible flex flex-col justify-between`}
+      className="modal overflow-auto	 shadow-md px-5 py-10 w-full lg:w-[450px] h-full fixed z-[3] bg-white right-0 invisible flex flex-col justify-between"
       style={{
         transform: isModalOpen ? "" : "translateX(100%)",
       }}
@@ -85,6 +94,17 @@ const CartModal = () => {
                           {item.merchandise.product.title}
                         </h3>
 
+                        {item.merchandise.selectedOptions.map(
+                          (option: any, index: number) => {
+                            if (option.value !== "Default Title")
+                              return (
+                                <h5 key={index}>
+                                  {option.name}: {option.value}
+                                </h5>
+                              );
+                          }
+                        )}
+
                         <QuantityInput
                           isMinusDisabled={quantityInputDisabled}
                           isPlusDisabled={quantityInputDisabled}
@@ -105,7 +125,7 @@ const CartModal = () => {
                 })}
               </ul>
             </div>
-            <div className="w-full">
+            <div className="w-full mt-8">
               <p className="p-1">
                 Total Cost: {formatPrice(cart.cost.totalAmount.amount)}
               </p>

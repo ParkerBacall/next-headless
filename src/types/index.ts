@@ -31,6 +31,7 @@ export type ShopifyProduct = {
     product: {
       description: string;
       status: string; 
+      options: any[]
       featuredImage: {
         altText: string;
         height: number;
@@ -116,6 +117,7 @@ export type Product = {
   variants: ProductVariant[];
   images: Image[];
   id: string;
+  options: any[];
   status: string; 
   handle: string;
   title: string;

@@ -15,6 +15,8 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
   const json = await getProduct(params.id);
   const product = json.data.product;
 
+  console.log('product', product)
+
   return (
     <Suspense fallback={<div>Loading... </div>}>
       <div className="container mx-auto md:pb-10">
@@ -62,8 +64,6 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
 
             <AddToCart
               product={product}
-              variant={product.variants[0]}
-              id={product.variants[0].id}
             />
           </div>
         </div>
