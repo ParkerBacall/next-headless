@@ -1,6 +1,7 @@
 import type { ShopifyProduct } from "@/types";
 import { gql } from "@/utils/gql";
 const getProduct = async (id: string): Promise<ShopifyProduct> => {
+
   const res = await fetch(process.env.GRAPHQL_API_URL!, {
     method: "POST",
     headers: {
