@@ -17,6 +17,9 @@ const getCart = async (id: string | undefined): Promise<any> => {
         query ($id: ID!) {
           cart(id: $id) {
             cost {
+              subtotalAmount{
+                amount
+              }
               totalAmount {
                 amount
               }
@@ -28,8 +31,21 @@ const getCart = async (id: string | undefined): Promise<any> => {
                 node {
                   id
                   cost {
+                    amountPerQuantity{
+                      amount
+                      currencyCode
+                    }
+                    compareAtAmountPerQuantity {
+                      amount
+                      currencyCode
+                    }
                     totalAmount {
                       amount
+                      currencyCode
+                    }
+                    subtotalAmount {
+                      amount
+                      currencyCode
                     }
                   }
                   quantity

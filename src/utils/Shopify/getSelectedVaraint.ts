@@ -1,12 +1,26 @@
 import type { Product, ProductVariant } from "@/types";
 
-const getSelectedVariant =  (product: Product, value: string, name: string) => {
-    return product.variants.find((variant: ProductVariant) => {
-      return (
-        variant.selectedOptions[0].name === name &&
-        variant.selectedOptions[0].value === value
-      );
-    })
-}
+const getSelectedVariant = (product: Product, selectedOptions: any) => {
+  return product.variants.find((variant: ProductVariant) => {
+    const selectedOptionMap: { [name: string]: string } = {};
+    const variantSelectedOptionMap: { [name: string]: string } = {};
 
-    export default getSelectedVariant;
+    selectedOptions.forEach(
+      ({ name, value }: { name: string; value: string }) => {
+        selectedOptionMap[name] = value;
+      }
+    );
+
+    variant.selectedOptions.forEach(
+      ({ name, value }: { name: string; value: string }) => {
+        variantSelectedOptionMap[name] = value;
+      }
+    );
+
+    return selectedOptions.every(({ name }: { name: string }) => {
+      return selectedOptionMap[name] === variantSelectedOptionMap[name];
+    });
+  });
+};
+
+export default getSelectedVariant;

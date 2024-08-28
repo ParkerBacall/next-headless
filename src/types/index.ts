@@ -78,6 +78,8 @@ export type CartItem = {
   quantity: number;
   cost: {
     totalAmount: Money;
+    amountPerQuantity: Money;
+    compareAtAmountPerQuantity: Money;
   };
   merchandise: {
     id: string;
@@ -114,6 +116,7 @@ export type Money = {
 };
 
 export type Product = {
+  priceRangeV2: any;
   variants: ProductVariant[];
   images: Image[];
   id: string;
@@ -137,6 +140,7 @@ export type ProductOption = {
 };
 
 export type ProductVariant = {
+  compareAtPrice: any;
   id: string;
   title: string;
   availableForSale: boolean;

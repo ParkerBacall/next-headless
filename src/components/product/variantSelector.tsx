@@ -1,6 +1,7 @@
 "use client";
+import { useState } from "react";
 import { Product, ProductVariant } from "@/types";
-import getSelectedVariant from "@/utils/Shopify/getSelectedVaraint"
+import getSelectedVariant from "@/utils/Shopify/getSelectedVaraint";
 
 type VariantSelectorProps = {
   product: Product;
@@ -13,25 +14,38 @@ const VariantSelector = ({
   selectedVariant,
   setSelectedVariant,
 }: VariantSelectorProps) => {
-  const handleClick = (value: string, name: string) => {
-    const newSelection = getSelectedVariant(product, value, name);
+
+  const initialSelectedOptions = product.options.map(( option: any) => {
+    return { 'name': option.name, 'value': option.optionValues[0].name }
+  })
+  const [selectedOptions, setSelectedOptions ] = useState(initialSelectedOptions)
+
+  const handleClick = (name: string, value: string) => {
+    const newSelectedOptions = selectedOptions.map((option: any) => {
+      if (option.name === name) {
+        return {'name': name, 'value': value}
+      } else {
+        return {'name': option.name, 'value': option.value}
+      }
+    })
+
+    const newSelection = getSelectedVariant(product, newSelectedOptions);
+    setSelectedOptions(newSelectedOptions)
     setSelectedVariant(newSelection);
   };
-
-
   return (
-    <div className="flex mb-4">
-      {product.options.map((options: any, index: number) => {
-        return (
-          <div key={index} className="flex flex-col">
-            <label className="mb-1">{options.name}:</label>
-            <div>
-              {options.optionValues.map((value: any, index: number) => {
-                return (
+    <div className="flex flex-col">
+      {product.options.map(
+        (options: any, index: number) =>
+          options.optionValues.length > 1 && (
+            <div key={index} className="flex flex-col mb-4">
+              <label className="mb-1">{options.name}:</label>
+              <div>
+                {options.optionValues.map((value: any, index: number) => (
                   <button
-                    onClick={() => handleClick(value.name, options.name)}
+                    onClick={() => handleClick(options.name, value.name)}
                     className={`${
-                      value.name === selectedVariant.title
+                      selectedVariant?.title.split(' / ').includes(value.name)
                         ? "bg-blue-600 text-white "
                         : "text-blue-600 "
                     } border inline-block mr-2 p-2 rounded-md border-blue-600 hover:bg-blue-600 hover:text-white ease-in-out duration-150`}
@@ -39,12 +53,11 @@ const VariantSelector = ({
                   >
                     {value.name}
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          )
+      )}
     </div>
   );
 };

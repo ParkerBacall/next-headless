@@ -11,7 +11,7 @@ const getProducts = async (): Promise<GraphQLResponse> => {
       body: JSON.stringify({
         query: gql`
           query ProductsQuery {
-            products(first: 6) {
+            products(first: 25) {
               nodes {
                 description
                 featuredImage {
