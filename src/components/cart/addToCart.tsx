@@ -7,6 +7,7 @@ import { useTransition } from "react";
 import { useState } from "react";
 import QuantityInput from "../common/quantityInput";
 import VariantSelector from "../product/variantSelector";
+import { formatPrice } from "@/utils/formatPrice";
 
 type AddToCartProps = {
   product: Product;
@@ -33,7 +34,7 @@ const AddToCart = ({ product }: AddToCartProps) => {
   const isDisabled =
     isPending ||
     product.status !== "ACTIVE" ||
-    !selectedVariant.availableForSale;
+    !selectedVariant?.availableForSale;
 
   const handleAddToCart = () => {
     if (cart) {
@@ -52,14 +53,23 @@ const AddToCart = ({ product }: AddToCartProps) => {
 
   return (
     <>
-      {product.options.length > 1 &&
-        product.options[0].optionValues.length > 1 && (
-          <VariantSelector
-            product={product}
-            selectedVariant={selectedVariant}
-            setSelectedVariant={setSelectedVariant}
-          />
+      <VariantSelector
+        product={product}
+        selectedVariant={selectedVariant}
+        setSelectedVariant={setSelectedVariant}
+      />
+      <div className="mb-4">
+        <span className="pr-2">
+          {formatPrice(selectedVariant.price.toString())}{" "}
+          {product.priceRangeV2.minVariantPrice.currencyCode}
+        </span>
+        {selectedVariant.compareAtPrice > selectedVariant.price && (
+          <span className="pr-2 text-gray-500 line-through">
+            {formatPrice(selectedVariant.compareAtPrice.toString())}{" "}
+            {product.priceRangeV2.minVariantPrice.currencyCode}
+          </span>
         )}
+      </div>
       <QuantityInput
         isMinusDisabled={isMinusDisabled}
         isPlusDisabled={isPlusDisabled}

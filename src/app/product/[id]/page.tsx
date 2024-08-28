@@ -14,9 +14,6 @@ type SingleProdutPageProps = {
 const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
   const json = await getProduct(params.id);
   const product = json.data.product;
-
-  console.log('product', product)
-
   return (
     <Suspense fallback={<div>Loading... </div>}>
       <div className="container mx-auto md:pb-10">
@@ -54,12 +51,6 @@ const SingleProductPage = async ({ params }: SingleProdutPageProps) => {
             ))}
 
             <h3 className="font-medium mt-3 text-3xl">{product.title}</h3>
-
-            <h4>
-              {formatPrice(product.priceRangeV2.minVariantPrice.amount)}{" "}
-              {product.priceRangeV2.minVariantPrice.currencyCode}
-            </h4>
-
             <p className="mt-2 mb-4">{product.description}</p>
 
             <AddToCart

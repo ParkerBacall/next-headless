@@ -32,8 +32,7 @@ const CartModal = () => {
     const { product } = item.merchandise;
     const { id, merchandise } = item;
     const { selectedOptions } = merchandise;
-    const { value, name } = selectedOptions[0];
-    const selectedVaraint = getSelectedVariant(product, value, name);
+    const selectedVaraint = getSelectedVariant(product, selectedOptions);
     if (selectedVaraint) {
       if (target === "plus") {
         startTransition(() => {
@@ -112,7 +111,25 @@ const CartModal = () => {
                           quantity={item.quantity}
                           item={item}
                         />
-                        <p>{formatPrice(item.cost.totalAmount.amount)}</p>
+                        <p>
+                          <span className="pr-2">
+                            {formatPrice(
+                              item.cost.amountPerQuantity.amount * item.quantity
+                            )}{" "}
+                            {item.cost.amountPerQuantity.currencyCode}
+                          </span>
+                          {parseInt(
+                            item.cost.compareAtAmountPerQuantity?.amount
+                          ) > parseInt(item.cost.amountPerQuantity.amount) && (
+                            <span className="pr-2 text-gray-500 line-through">
+                              {formatPrice(
+                                item.cost.compareAtAmountPerQuantity.amount *
+                                  item.quantity
+                              )}{" "}
+                              {item.cost.amountPerQuantity.currencyCode}
+                            </span>
+                          )}
+                        </p>
                       </div>
                       <button
                         disabled={isPending}
