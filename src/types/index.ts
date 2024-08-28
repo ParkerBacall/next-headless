@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type GraphQLResponse = {
   data: {
     products: {
@@ -116,6 +118,8 @@ export type Money = {
 };
 
 export type Product = {
+  tags: any;
+  description: ReactNode;
   priceRangeV2: any;
   variants: ProductVariant[];
   images: Image[];

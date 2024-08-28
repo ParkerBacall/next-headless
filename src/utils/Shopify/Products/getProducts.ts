@@ -1,7 +1,7 @@
 import type { GraphQLResponse } from "@/types";
 import { gql } from "@/utils/gql";
 
-const getProducts = async (): Promise<GraphQLResponse> => {
+const getProducts = async (): Promise<any> => {
     const res = await fetch(process.env.GRAPHQL_API_URL!, {
       method: "POST",
       headers: {
