@@ -1,5 +1,6 @@
 import getProducts from "@/utils/Shopify/Products/getProducts";
-import ProductGrid from "@/components/product/productGrid";
+import ProductGrid from "@/components/collections/productGrid";
+
 const HomePage = async () => {
   const json = await getProducts();
   const { products } = json.data;

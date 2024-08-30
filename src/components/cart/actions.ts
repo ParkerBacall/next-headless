@@ -41,7 +41,6 @@ export async function createCartAndSetCookie(id: string, quantity: number) {
     }
   }
 
-
   export async function redirectToCheckout() {
     let cartId = cookies().get('cartId')?.value;
   
