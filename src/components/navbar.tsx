@@ -1,7 +1,7 @@
 import Link from "next/link";
 import CartTrigger from "./cart/cartTrigger";
 import CartModal from "./cart/cartModal";
-import getCollections from "@/utils/Shopify/getCollections";
+import getCollections from "@/utils/Shopify/Collections/getCollections";
 
 const Navbar = async () => {
   const collections = await getCollections();

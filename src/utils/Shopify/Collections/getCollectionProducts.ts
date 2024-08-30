@@ -1,7 +1,21 @@
 import type { GraphQLResponse } from "@/types";
 import { gql } from "@/utils/gql";
 
-const getCollectionProducts = async (handle: string): Promise<any> => {
+const getCollectionProducts = async (handle: string, sortKey: string): Promise<any> => {
+
+  let graphqlSortKey = sortKey;
+  let graphqlReverse = false;
+
+
+  if (sortKey?.includes('_')) {
+    const sortKeyArray = sortKey.split('_')
+    graphqlSortKey = sortKeyArray[0];
+
+    if (sortKeyArray[1] === "DESC") {
+      graphqlReverse = true
+    }
+  }
+
   const res = await fetch(process.env.GRAPHQL_API_URL!, {
     method: "POST",
     headers: {
@@ -10,10 +24,11 @@ const getCollectionProducts = async (handle: string): Promise<any> => {
     },
     body: JSON.stringify({
       query: gql`
-        query getCollectionIdFromHandle($handle: String!) {
+        query getCollectionIdFromHandle($handle: String!, $sortKey:ProductCollectionSortKeys, $reverse: Boolean!) {
             collectionByHandle(handle: $handle) {
             title
-              products(first: 50) {
+            handle
+              products(first: 50, sortKey: $sortKey, reverse: $reverse) {
                 edges {
                   node {
                     description
@@ -77,7 +92,9 @@ const getCollectionProducts = async (handle: string): Promise<any> => {
         
       `,
         variables: {
-            handle: handle,
+            handle,
+            sortKey: graphqlSortKey,
+            reverse: graphqlReverse
           },
     }),
   });
@@ -93,11 +110,10 @@ const getCollectionProducts = async (handle: string): Promise<any> => {
   }
 
   const response = await res.json();
-  console.log('response', response)
   const products = response.data.collectionByHandle.products.edges.map(
     (product: { node: any }) => product.node
   );
-  return {products, title: response.data.collectionByHandle.title};
+  return {products, handle: response.data.collectionByHandle.handle, title: response.data.collectionByHandle.title};
 };
 
 export default getCollectionProducts;
